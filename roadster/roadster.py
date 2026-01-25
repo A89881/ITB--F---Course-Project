@@ -1,6 +1,11 @@
 import numpy as np
 from scipy import interpolate
 
+# Change working directory to the scripts directory 
+# Additional, due to computer errors, recommended by ChatGPT
+import os
+os.chdir(os.path.dirname(__file__))
+
 def load_route(route):
     """ 
     Get speed data from route .npz-file. Example usage:
@@ -40,9 +45,6 @@ def consumption(v):
     else:
         raise ValueError('Speed must be non-negative')
     
-
-    # raise NotImplementedError('consumption not implemented yet!')
-
 ### PART 1B ###
 def velocity(x, route):
     # ALREADY IMPLEMENTED!
@@ -60,14 +62,30 @@ def velocity(x, route):
     return v
 
 ### PART 2A ###
-def time_to_destination(x, route, n):
-    # REMOVE THE FOLLOWING LINE AND WRITE YOUR SOLUTION
-    raise NotImplementedError('time_to_destination not implemented yet!')
+def time_to_destination(x: float, route, n):
+    # Determine step size
+    h = (x - 0) / (n - 1)
+    # Create array of x values
+    x_values = np.linspace(0, x, n) 
+    # Define function to integrate
+    f = lambda x: 1 / velocity(x, route) # type: ignore
+    # Apply trapezoidal rule
+    I_trap = (h/2)*(f(x_values[0]) + 2 * sum(f(x_values[1:n-1])) + f(x_values[-1]))
+    # Return result
+    return I_trap
 
 ### PART 2B ###
 def total_consumption(x, route, n):
-    # REMOVE THE FOLLOWING LINE AND WRITE YOUR SOLUTION
-    raise NotImplementedError('total_consumption not implemented yet!')
+    # Determine step size
+    h = (x - 0) / (n - 1)
+    # Create array of x values
+    x_values = np.linspace(0, x, n)
+    # Define function to integrate
+    f = lambda x: consumption(velocity(x, route)) # type: ignore
+    # Apply trapezoidal rule
+    I_trap = (h/2)*(f(x_values[0]) + 2 * sum(f(x_values[1:n-1])) + f(x_values[-1]))
+    # Return result
+    return I_trap
 
 ### PART 3A ###
 def distance(T, route): 

@@ -3,7 +3,7 @@ import roadster
 import matplotlib.pyplot as plt
 import numpy as np
 
-# Change working directory to the script"s directory 
+# Change working directory to the scripts directory 
 # Additional, due to computer errors, recommended by ChatGPT
 import os
 os.chdir(os.path.dirname(__file__))
