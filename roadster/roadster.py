@@ -32,8 +32,16 @@ def save_route(route, distance_km, speed_kmph):
 
 ### PART 1A ###
 def consumption(v):
-    # REMOVE THE FOLLOWING LINE AND WRITE YOUR SOLUTION
-    raise NotImplementedError('consumption not implemented yet!')
+    a1, a2, a3, a4 = 546.8, 50.31, 0.2584, 0.00821
+    coeffefficients = [a4, a3, a2, a1]
+    
+    if np.all(v >= 0):
+        return np.poly1d(coeffefficients)(v)
+    else:
+        raise ValueError('Speed must be non-negative')
+    
+
+    # raise NotImplementedError('consumption not implemented yet!')
 
 ### PART 1B ###
 def velocity(x, route):
