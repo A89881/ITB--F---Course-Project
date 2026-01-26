@@ -9,7 +9,7 @@ os.chdir(os.path.dirname(__file__))
 source_file = "speed_anna.npz"
 
 # Define list of nodes for convergence study
-n = 1000 # Arbitrary initial number of nodes
+n = 10**3 # Arbitrary initial number of nodes
 list_of_nodes = [n*2**i for i in range(10)]
 
 # General max distance data definition

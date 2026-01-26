@@ -38,12 +38,12 @@ def save_route(route, distance_km, speed_kmph):
 ### PART 1A ###
 def consumption(v):
     a1, a2, a3, a4 = 546.8, 50.31, 0.2584, 0.00821
-    coeffefficients = [a4, a3, a2, a1]
+    poly = lambda v: a1*v**(-1) + a2 + a3*v + a4*v**2
     
     if np.all(v >= 0):
-        return np.poly1d(coeffefficients)(v)
+        return poly(v)
     else:
-        raise ValueError('Speed must be non-negative')
+        raise ValueError("Speed must be non-negative")
     
 ### PART 1B ###
 def velocity(x, route):
@@ -63,27 +63,27 @@ def velocity(x, route):
 
 ### PART 2A ###
 def time_to_destination(x: float, route, n):
-    # Determine step size
-    h = (x - 0) / (n - 1)
-    # Create array of x values
-    x_values = np.linspace(0, x, n) 
+    # Determine step size, based on n intervals
+    h = (x - 0) / (n)
+    # Create array of x values (and n+1 points)
+    x_values = np.linspace(0, x, n + 1) 
     # Define function to integrate
     f = lambda x: 1 / velocity(x, route) # type: ignore
     # Apply trapezoidal rule
-    I_trap = (h/2)*(f(x_values[0]) + 2 * sum(f(x_values[1:n-1])) + f(x_values[-1]))
+    I_trap = (h/2)*(f(x_values[0]) + 2 * sum(f(x_values[1:n])) + f(x_values[-1]))
     # Return result
     return I_trap
 
 ### PART 2B ###
 def total_consumption(x, route, n):
     # Determine step size
-    h = (x - 0) / (n - 1)
+    h = (x - 0) / (n)
     # Create array of x values
-    x_values = np.linspace(0, x, n)
+    x_values = np.linspace(0, x, n + 1)
     # Define function to integrate
     f = lambda x: consumption(velocity(x, route)) # type: ignore
     # Apply trapezoidal rule
-    I_trap = (h/2)*(f(x_values[0]) + 2 * sum(f(x_values[1:n-1])) + f(x_values[-1]))
+    I_trap = (h/2)*(f(x_values[0]) + 2 * sum(f(x_values[1:n])) + f(x_values[-1]))
     # Return result
     return I_trap
 

@@ -28,6 +28,7 @@ def test_part2a_A():
     n = 2
     ref_value   = 0.9010019433964633
     check_value = roadster.time_to_destination(x, route, n)
+    print(ref_value, check_value)
     assert np.isclose(ref_value, check_value), 'time_to_destination(...) not close to reference value'
 
 def test_part2a_B():
@@ -36,6 +37,7 @@ def test_part2a_B():
     n = 100
     ref_value   = 0.4049811174885838
     check_value = roadster.time_to_destination(x, route, n)
+    print(ref_value, check_value)
     assert np.isclose(ref_value, check_value), 'time_to_destination(...) not close to reference value'
 
 def test_part2a_C():
@@ -44,6 +46,7 @@ def test_part2a_C():
     n = 1000000
     ref_value   = 0.5574635291451433
     check_value = roadster.time_to_destination(x, route, n)
+    print(ref_value, check_value)
     assert np.isclose(ref_value, check_value), 'time_to_destination(...) not close to reference value'
 
 # Correct output for last value (whole distance)?    
@@ -54,6 +57,7 @@ def test_part2a_D():
     n = 10000
     ref_value   = 0.9614649355160398
     check_value = roadster.time_to_destination(x, route, n)
+    print(ref_value, check_value)
     assert np.isclose(ref_value, check_value), 'time_to_destination(...) not close to reference value'
 
 ### PART 2B, TOTAL CONSUMPTION ###
