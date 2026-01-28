@@ -28,4 +28,5 @@ T_theoretical =  roadster.time_to_destination(distance_km[-1], 'speed_anna.npz',
 
 # Calculate and print errors
 errors = [abs(T - T_theoretical) for T in outputs]
-print(errors)
+errors_float = [float(i) for i in errors]
+print(errors_float)

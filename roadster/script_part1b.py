@@ -27,7 +27,7 @@ distance_km2, speed_kmph2 = roadster.load_route(source_file_2) # type: ignore
 
 # Load the interpolated data using roadster.velocity function
 # Create an array of 1000000000 points between 0 and the last distance of each route
-n = 10**7
+n = 10**3
 x1 = np.linspace(0, distance_km1[-1], n)
 v1 = roadster.velocity(x1, source_file_1) # type: ignore
 

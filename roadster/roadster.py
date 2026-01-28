@@ -37,9 +37,13 @@ def save_route(route, distance_km, speed_kmph):
 
 ### PART 1A ###
 def consumption(v):
+    # Consumption polynomial coefficients
     a1, a2, a3, a4 = 546.8, 50.31, 0.2584, 0.00821
+    
+    # Define consumption as a function of speed
     poly = lambda v: a1*v**(-1) + a2 + a3*v + a4*v**2
     
+    # Return consumption value(s)
     if np.all(v >= 0):
         return poly(v)
     else:
@@ -65,20 +69,24 @@ def velocity(x, route):
 def time_to_destination(x: float, route, n):
     # Determine step size, based on n intervals
     h = (x - 0) / (n)
+    
     # Create array of x values (and n+1 points)
     x_values = np.linspace(0, x, n + 1) 
+    
     # Define function to integrate
     f = lambda x: 1 / velocity(x, route) # type: ignore
+    
     # Apply trapezoidal rule
     I_trap = (h/2)*(f(x_values[0]) + 2 * sum(f(x_values[1:n])) + f(x_values[-1]))
+    
     # Return result
     return I_trap
 
 ### PART 2B ###
 def total_consumption(x, route, n):
-    # Determine step size
+    # Determine step size, based on n intervals
     h = (x - 0) / (n)
-    # Create array of x values
+    # Create array of x values (and n+1 points)
     x_values = np.linspace(0, x, n + 1)
     # Define function to integrate
     f = lambda x: consumption(velocity(x, route)) # type: ignore
@@ -89,10 +97,82 @@ def total_consumption(x, route, n):
 
 ### PART 3A ###
 def distance(T, route): 
-    # REMOVE THE FOLLOWING LINE AND WRITE YOUR SOLUTION
-    raise NotImplementedError('distance not implemented yet!')
+    # Tolerance for convergence
+    tol = 10**(-4)
+    
+    # Function to find root of f(x) = time_to_destination(x, route) - T
+    """
+    Relevant Comment: use large n for better accuracy, 
+    otherwise Newton's method may not converge well
+    """
+    f = lambda x: time_to_destination(x, route, 10**6) - T 
+    
+    # Derivative f'(x) = 1 / velocity(x, route)
+    df = lambda x: 1 / velocity(x, route)  # type: ignore
+    
+    
+    # Newton's method implementation
+    # Initial guess, using velocity at 0 km
+    # From T = x / v  =>  x = v * T
+    x0 = velocity(0, route) * T  # type: ignore 
+    
+    # Arbitrary large number of max iterations
+    max_iter = 10**3
+    
+    # Iteration loop; stop if within tolerance or max iterations reached
+    for i in range(max_iter):
+        # Perform Newton's method step
+        x1 = x0 - f(x0) / df(x0)
+        
+        # Check for convergence
+        if abs(x1 - x0) <= tol:
+            return x1
+        
+        # Update x0 for next iteration
+        x0 = x1
 
 ### PART 3B ###
 def reach(C, route):
-    # REMOVE THE FOLLOWING LINE AND WRITE YOUR SOLUTION
-    raise NotImplementedError('reach not implemented yet!')
+    # Tolerance for convergence
+    tol = 10**(-4)
+
+    # Function to find root of f(x) = total_consumption(x, route) - C
+    """
+    Relevant Comment: use large n for better accuracy, 
+    otherwise Newton's method may not converge well
+    """
+    f = lambda x: total_consumption(x, route, 10**6) - C
+    
+    # Derivative f'(x) = consumption(velocity(x, route))
+    df = lambda x: consumption(velocity(x, route))  # type: ignore
+    
+    # Newton's method implementation
+    # Initial guess, using initial consumption value at 1 km
+    # From C = consumption(v) * x  =>  x = C / consumption(v)
+    x0 = C / consumption(velocity(0, route))  # type: ignore
+    max_distance = max(load_route(route)[0])
+    min_distance = min(load_route(route)[0])
+    
+    
+    # Arbitrary large number of max iterations
+    max_iter = 10**3
+    # Iteration loop; stop if within tolerance or max iterations reached
+    for i in range(max_iter):
+        
+        # Ensure x0 stays within valid distance range
+        if min_distance < x0 < max_distance:
+            
+            # Perform Newton's method step
+            x1 = x0 - f(x0) / df(x0)
+            
+            # Check for convergence
+            if abs(x1 - x0) <= tol:
+                return x1
+            
+            # Update x0 for next iteration
+            x0 = x1
+        else:
+            if x0 >= max_distance:
+                return max_distance
+            else:
+                return min_distance
