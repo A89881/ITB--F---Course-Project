@@ -85,7 +85,7 @@ def time_to_destination(x: float, route, n):
 ### PART 2B ###
 def total_consumption(x, route, n):
     # Determine step size, based on n intervals
-    h = (x - 0) / (n)
+    h = (x - 0) / n
     # Create array of x values (and n+1 points)
     x_values = np.linspace(0, x, n + 1)
     # Define function to integrate
@@ -100,14 +100,14 @@ def distance(T, route):
     # Tolerance for convergence
     tol = 10**(-4)
     
-    # Function to find root of f(x) = time_to_destination(x, route) - T
+    # Function to find root of f(x) = time_to_destination(x, route) - T => time_to_destination(x, route) = T
     """
     Relevant Comment: use large n for better accuracy, 
     otherwise Newton's method may not converge well
     """
     f = lambda x: time_to_destination(x, route, 10**6) - T 
     
-    # Derivative f'(x) = 1 / velocity(x, route)
+    # Derivative f'(x) = 1 / velocity(x, route) <== Fundamental Theorem of Calculus
     df = lambda x: 1 / velocity(x, route)  # type: ignore
     
     
@@ -136,7 +136,7 @@ def reach(C, route):
     # Tolerance for convergence
     tol = 10**(-4)
 
-    # Function to find root of f(x) = total_consumption(x, route) - C
+    # Function to find root of f(x) = total_consumption(x, route) - C => total_consumption(x, route) = C
     """
     Relevant Comment: use large n for better accuracy, 
     otherwise Newton's method may not converge well
@@ -147,12 +147,13 @@ def reach(C, route):
     df = lambda x: consumption(velocity(x, route))  # type: ignore
     
     # Newton's method implementation
-    # Initial guess, using initial consumption value at 1 km
+    # Initial guess, using initial consumption value at 0 km
     # From C = consumption(v) * x  =>  x = C / consumption(v)
     x0 = C / consumption(velocity(0, route))  # type: ignore
+    
+    # System boundaries
     max_distance = max(load_route(route)[0])
     min_distance = min(load_route(route)[0])
-    
     
     # Arbitrary large number of max iterations
     max_iter = 10**3
@@ -174,5 +175,4 @@ def reach(C, route):
         else:
             if x0 >= max_distance:
                 return max_distance
-            else:
-                return min_distance
+            return min_distance

@@ -26,6 +26,55 @@ def route_nyc(t,x):
     return pchip_2d(data_t,data_x,nyc_velocity,t,x)-10
 
 ### PART 4A ###
-def nyc_route_traveler_euler(t0,h):
-    # REMOVE THE FOLLOWING LINE AND WRITE YOUR SOLUTION
-    raise NotImplementedError('nyc_route_traveler_euler not implemented yet!')
+def nyc_route_traveler_euler(t0, h):
+  # x'(t) = f(x, t), where f(x, t) = route_nyc(t, x)
+  dxdt = lambda x, t: route_nyc(t, x)
+    
+  # Initial Condition x(t0) = 0
+  x0 = 0
+  
+  # Variable to hold next position
+  x1 = x0
+  
+  # Max Postion of the Route
+  max_distance = 60
+  
+  # Initialize list to store time, distance, speed
+  distance_km = np.array([x0])
+  time_h = np.array([t0])
+  speed_kmph = np.array([dxdt(x0, t0)])
+  
+  # Euler - Method for solving ODE
+  while x1 < max_distance:
+    # Print debug info: Regarding Scalar vs Array Types Error
+    # print(f'x0: {x0}, t0: {t0}')
+    # print(f"dxdt(x0, t0): {type(dxdt(x0, t0))}, value: {dxdt(x0, t0)}")
+    
+    # Compute next time and position
+    t1 = t0 + h
+    x1 = x0 + h * dxdt(x0, t0)
+    
+    # Check if we have reached or exceeded max distance
+    if x1 > max_distance:
+      # Solve for exact time to reach max distance
+      delta_t = (max_distance - x0) / dxdt(x0, t0)
+      t1 = t0 + delta_t
+      x1 = max_distance
+      
+      # Append final values and break loop
+      distance_km = np.append(distance_km, x1)
+      speed_kmph = np.append(speed_kmph, dxdt(x1, t1))
+      time_h = np.append(time_h, t1)
+      break
+    
+    # Append computed values to lists
+    distance_km = np.append(distance_km, x1)
+    speed_kmph = np.append(speed_kmph, dxdt(x1, t1))
+    time_h = np.append(time_h, t1)
+    
+    # Update for next iteration
+    x0 = x1
+    t0 = t1
+
+  # Return numpy arrays, with time_h, distance_km, speed_kmph
+  return time_h, distance_km, speed_kmph
