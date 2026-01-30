@@ -155,24 +155,21 @@ def reach(C, route):
     max_distance = max(load_route(route)[0])
     min_distance = min(load_route(route)[0])
     
-    # Arbitrary large number of max iterations
-    max_iter = 10**3
-    # Iteration loop; stop if within tolerance or max iterations reached
-    for i in range(max_iter):
+    # Arbitrary large number of max iterations, via while loop  
+    # Conditional loop to ensure x0 stays within valid distance range, thus while loop  
+    while min_distance < x0 < max_distance:
+        # Perform Newton's method step
+        x1 = x0 - f(x0) / df(x0)
+        print(type(x1), x1 )
         
+        # Check for convergence
+        if abs(x1 - x0) <= tol:
+            return x1
+        # Update x0 for next iteration
+        x0 = x1
+    else:
         # Ensure x0 stays within valid distance range
-        if min_distance < x0 < max_distance:
-            
-            # Perform Newton's method step
-            x1 = x0 - f(x0) / df(x0)
-            
-            # Check for convergence
-            if abs(x1 - x0) <= tol:
-                return x1
-            
-            # Update x0 for next iteration
-            x0 = x1
-        else:
-            if x0 >= max_distance:
-                return max_distance
-            return min_distance
+        if x0 >= max_distance:
+            return max_distance
+        return min_distance
+    
