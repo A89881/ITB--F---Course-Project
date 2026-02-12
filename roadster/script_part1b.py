@@ -45,6 +45,7 @@ plt.plot(x2, v2, c="yellow", label="Elsa - Interpolated")
 plt.xlabel("Distance (km)")
 plt.ylabel("Speed (km/h)")
 plt.legend()
-plt.title("Velocity - Distance from route data")
+plt.title(f"Velocity - Distance from route data 10e{np.log10(n):.0f} points")
 plt.grid()
+plt.savefig("interpolation_plot.png") # Save the plot as a PNG file
 plt.show()

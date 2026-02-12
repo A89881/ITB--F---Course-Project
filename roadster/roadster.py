@@ -66,7 +66,7 @@ def velocity(x, route):
     return v
 
 ### PART 2A ###
-def time_to_destination(x: float, route, n):
+def time_to_destination(x: float, route, n):    
     # Determine step size, based on n intervals
     h = (x - 0) / (n)
     
