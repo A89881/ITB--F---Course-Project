@@ -114,7 +114,7 @@ def distance(T, route):
     # Newton's method implementation
     # Initial guess, using velocity at 0 km
     # From T = x / v  =>  x = v * T
-    x0 = velocity(0, route) * T  # type: ignore 
+    x0 = np.average(load_route(route)[1]) * T  # type: ignore 
     
     # Arbitrary large number of max iterations
     max_iter = 10**3
@@ -149,7 +149,7 @@ def reach(C, route):
     # Newton's method implementation
     # Initial guess, using initial consumption value at 0 km
     # From C = consumption(v) * x  =>  x = C / consumption(v)
-    x0 = C / consumption(velocity(0, route))  # type: ignore
+    x0 = C / consumption(np.average(load_route(route)[1]))  # type: ignore
     
     # System boundaries
     max_distance = max(load_route(route)[0])
